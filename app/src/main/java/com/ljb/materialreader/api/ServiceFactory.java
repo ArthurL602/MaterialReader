@@ -1,15 +1,15 @@
 package com.ljb.materialreader.api;
 
+import android.util.Log;
+
 import com.ihsanbal.logging.LoggingInterceptor;
 import com.ljb.materialreader.app.App;
 import com.ljb.materialreader.utils.NetWorkUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 import okhttp3.Cache;
-import okhttp3.CacheControl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -89,18 +89,19 @@ public class ServiceFactory {
         public Response intercept(Chain chain) throws IOException {
             Request request = chain.request();
 
-            CacheControl cacheControl = new CacheControl.Builder()//
-                    .maxAge(1, TimeUnit.MINUTES)//
-                    .build();
-            request = request.newBuilder()//
-                    .cacheControl(cacheControl)//
-                    .build();
+//            CacheControl cacheControl = new CacheControl.Builder()//
+//                    .maxAge(1, TimeUnit.MINUTES)//
+//                    .build();
+//            request = request.newBuilder()//
+//                    .cacheControl(cacheControl)//
+//                    .build();
             if (NetWorkUtils.isConnected(App.getContext())) {//有网络
                 return chain.proceed(request).newBuilder()//
                         .header("Cache-Control", "public ,max-age=" + DEFAULT_MAX_STALE_ONLINE)//
                         .removeHeader("Pragma")//
                         .build();
             } else {//没有网络
+                Log.e("TAG", "没有网络");
                 return chain.proceed(request).newBuilder()//
                         .header("Cache-Control", "public ,only-if-cache,max-stale=" + DEFAULT_MAX_STALE_OFFLINE)//
                         .removeHeader("Pragma")//
