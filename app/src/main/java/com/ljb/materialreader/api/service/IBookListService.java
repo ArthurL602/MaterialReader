@@ -3,9 +3,10 @@ package com.ljb.materialreader.api.service;
 
 import com.ljb.materialreader.bean.response.douban.BookListResponse;
 
+import io.reactivex.Observable;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
-import rx.Observable;
+
 
 /**
  * Author      :ljb

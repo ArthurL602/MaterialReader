@@ -2,13 +2,16 @@ package com.ljb.materialreader.ui.model;
 
 import com.ljb.materialreader.api.ServiceFactory;
 import com.ljb.materialreader.api.service.IBookListService;
+import com.ljb.materialreader.base.BaseModel;
 import com.ljb.materialreader.bean.response.douban.BookListResponse;
 import com.ljb.materialreader.callback.ApiCompleteListener;
 import com.ljb.materialreader.constant.UrlConstant;
+import com.trello.rxlifecycle2.LifecycleProvider;
 
-import rx.Observer;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 
 /**
@@ -17,7 +20,8 @@ import rx.schedulers.Schedulers;
  * Description :
  */
 
-public class BookListModel {
+public class BookListModel extends BaseModel {
+    private LifecycleProvider mProvider;
     /**
      * 获取图书列表
      *
@@ -32,27 +36,32 @@ public class BookListModel {
         IBookListService iBookListService = ServiceFactory.createService(UrlConstant.HOST_URL_DOUBAN,
                 IBookListService.class);
         iBookListService.getBookList(q, tag, start, count, fields)//
-
                 .subscribeOn(Schedulers.io())//
                 .observeOn(AndroidSchedulers.mainThread())//
-                .subscribe(new Observer<BookListResponse>() {
+                .compose(getProvider().bindToLifecycle())//
+                .subscribe(new io.reactivex.Observer<BookListResponse>() {
                     @Override
-                    public void onCompleted() {
-                        listener.onComplete();
+                    public void onSubscribe(@NonNull Disposable d) {
+
                     }
 
                     @Override
-                    public void onError(Throwable e) {
-                        listener.onError(e.getMessage());
-                    }
-
-                    @Override
-                    public void onNext(BookListResponse bookListResponse) {
+                    public void onNext(@NonNull BookListResponse bookListResponse) {
                         if (bookListResponse != null) {
                             listener.onSuccess(bookListResponse);
                         } else {
                             listener.onFailure();
                         }
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        listener.onError(e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        listener.onComplete();
                     }
                 });
 

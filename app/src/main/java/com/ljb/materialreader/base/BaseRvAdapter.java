@@ -26,7 +26,7 @@ public abstract class BaseRvAdapter<T> extends RecyclerView.Adapter<BaseViewHold
     private List<T> mDatas;
     protected Context mContext;
     private int layoutId;
-    private LayoutInflater mInflater;
+    protected LayoutInflater mInflater;
     private OnItemClickListener mOnItemClickListener;
     public static final int TYPE_EMPTY = 10000000;
     public static final int TYPE_COMMON = 10000001;
@@ -184,6 +184,13 @@ public abstract class BaseRvAdapter<T> extends RecyclerView.Adapter<BaseViewHold
      */
     public void addDataInPosition(int position, @NonNull List<T> data) {
         mDatas.addAll(position, data);
+        notifyDataSetChanged();
+
+    }
+
+    public void addNewData(List<T> data){
+        mDatas.clear();
+        mDatas.addAll(data);
         notifyDataSetChanged();
 
     }

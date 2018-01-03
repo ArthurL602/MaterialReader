@@ -68,7 +68,7 @@ public class BookListFragment extends BaseFragment<BookListPresenter> implements
 
     @Override
     protected BookListPresenter getPresenter() {
-        return new BookListPresenter(this);
+        return new BookListPresenter(this,this);
     }
 
     @Override

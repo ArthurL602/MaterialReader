@@ -5,6 +5,7 @@ import com.ljb.materialreader.bean.response.douban.BookListResponse;
 import com.ljb.materialreader.callback.ApiCompleteListener;
 import com.ljb.materialreader.ui.model.BookListModel;
 import com.ljb.materialreader.ui.view.BookListView;
+import com.trello.rxlifecycle2.LifecycleProvider;
 
 /**
  * Author      :ljb
@@ -12,13 +13,14 @@ import com.ljb.materialreader.ui.view.BookListView;
  * Description :
  */
 
-public class BookListPresenter extends BasePresenter {
+public class BookListPresenter extends BasePresenter<BookListView> {
     private BookListView mBookListView;
     private BookListModel mBookListModel;
 
-    public BookListPresenter(BookListView bookListView) {
+    public BookListPresenter(BookListView bookListView, LifecycleProvider provider) {
         mBookListView = bookListView;
         mBookListModel = new BookListModel();
+        mBookListModel.setProvider(provider);
     }
 
     /**

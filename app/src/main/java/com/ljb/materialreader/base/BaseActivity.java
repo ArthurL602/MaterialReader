@@ -2,7 +2,8 @@ package com.ljb.materialreader.base;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+
+import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
 import butterknife.ButterKnife;
 
@@ -12,7 +13,7 @@ import butterknife.ButterKnife;
  * Description :所有个Activity的基类，处理Activity的共性内容和逻辑
  */
 
-public abstract class BaseActivity<P extends BasePresenter> extends AppCompatActivity implements IBaseView {
+public abstract class BaseActivity<P extends BasePresenter> extends RxAppCompatActivity implements IBaseView {
     protected P mPresenter;
 
     @Override
@@ -27,6 +28,7 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
         initView();
         initEvent();
     }
+
 
 
     @Override

@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <array name="main_tab_type">
+    <string-array name="main_tab_type">
         <item>新书</item>
         <item>热门</item>
         <item>推荐</item>
         <item>分类</item>
         <item>标签</item>
         <item>发现</item>
-    </array>
+    </string-array>
+    <string-array name="book_category">
+        <item>文学</item>
+        <item>流行</item>
+        <item>文化</item>
+        <item>生活</item>
+        <item>经营</item>
+        <item>科技</item>
+        <item>国家</item>
+        <item>学科</item>
+        <item>作者</item>
+        <item>出版社</item>
+        <item>人群</item>
+        <item>宗教</item>
+        <item>其他</item>
+    </string-array>
+    <string-array name="book_category_ic">
+        <item>@mipmap/ic_category_literature</item>
+        <item>@mipmap/ic_category_popular</item>
+        <item>@mipmap/ic_category_culture</item>
+        <item>@mipmap/ic_category_life</item>
+        <item>@mipmap/ic_category_management</item>
+        <item>@mipmap/ic_category_technology</item>
+        <item>@mipmap/ic_category_country</item>
+        <item>@mipmap/ic_category_subject</item>
+        <item>@mipmap/ic_category_author</item>
+        <item>@mipmap/ic_category_publisher</item>
+        <item>@mipmap/ic_category_throng</item>
+        <item>@mipmap/ic_category_religion</item>
+        <item>@mipmap/ic_category_other</item>
+        <item>@mipmap/ic_category_literature</item>
+    </string-array>
 </resources>
