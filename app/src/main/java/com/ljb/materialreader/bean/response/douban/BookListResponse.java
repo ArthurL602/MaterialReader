@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Author      :ljb
  * Date        :2018/1/2
- * Description :
+ * Description : 图书信息集合实例类
  */
 
 public class BookListResponse extends BaseResponse {

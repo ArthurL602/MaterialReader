@@ -34,7 +34,6 @@ public abstract class BaseRvAdapter<T> extends RecyclerView.Adapter<BaseViewHold
     private FloatingActionButton mFab;
     private onLoadMoreListener mOnLoadMoreListener;
     private LoadMoreView mLoadMoreView;
-
     public void setLoadMoreView(LoadMoreView loadMoreView) {
         mLoadMoreView = loadMoreView;
     }
@@ -100,17 +99,22 @@ public abstract class BaseRvAdapter<T> extends RecyclerView.Adapter<BaseViewHold
         return holder;
     }
 
+    public List<T> getDatas() {
+        return mDatas;
+    }
 
     @Override
-    public void onBindViewHolder(BaseViewHolder holder, int position) {
+    public void onBindViewHolder(final BaseViewHolder holder, final int position) {
+
         if (holder.getItemViewType() == TYPE_COMMON) {
-            T t = mDatas.get(position);
+          final T t = mDatas.get(position);
             convert(holder, t);
+
             if (mOnItemClickListener != null) {
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOnItemClickListener.onItemClick(v, BaseRvAdapter.this);
+                        mOnItemClickListener.onItemClick(v,holder,t);
                     }
                 });
 
@@ -280,8 +284,8 @@ public abstract class BaseRvAdapter<T> extends RecyclerView.Adapter<BaseViewHold
         return max;
     }
 
-    public interface OnItemClickListener {
-        void onItemClick(View view, BaseRvAdapter adapter);
+    public  interface OnItemClickListener<T> {
+        void onItemClick(View view, BaseViewHolder holder,T data);
     }
 
     /**

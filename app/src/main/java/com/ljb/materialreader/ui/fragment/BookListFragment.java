@@ -1,19 +1,28 @@
 package com.ljb.materialreader.ui.fragment;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.View;
+import android.widget.ImageView;
 
+import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.ljb.materialreader.R;
 import com.ljb.materialreader.adapter.BookListAdater;
 import com.ljb.materialreader.base.BaseFragment;
 import com.ljb.materialreader.base.BaseRvAdapter;
+import com.ljb.materialreader.base.BaseViewHolder;
 import com.ljb.materialreader.bean.response.douban.BookInfoResponse;
 import com.ljb.materialreader.bean.response.douban.BookListResponse;
+import com.ljb.materialreader.ui.activity.BookDetailActivity;
 import com.ljb.materialreader.ui.activity.MainActivity;
 import com.ljb.materialreader.ui.presenter.BookListPresenter;
 import com.ljb.materialreader.ui.view.BookListView;
@@ -68,7 +77,7 @@ public class BookListFragment extends BaseFragment<BookListPresenter> implements
 
     @Override
     protected BookListPresenter getPresenter() {
-        return new BookListPresenter(this,this);
+        return new BookListPresenter(this, this);
     }
 
     @Override
@@ -106,7 +115,7 @@ public class BookListFragment extends BaseFragment<BookListPresenter> implements
         mRvContent.setItemAnimator(new DefaultItemAnimator());
 
         //绑定fab
-        mBookListAdater.bindFab(((MainActivity)getActivity()).getFab());
+        mBookListAdater.bindFab(((MainActivity) getActivity()).getFab());
         //加载数据
         mPresenter.loadBooks(null, tag, 0, count, fields);
     }
@@ -149,6 +158,31 @@ public class BookListFragment extends BaseFragment<BookListPresenter> implements
             @Override
             public int getLoddEndViewId() {
                 return R.id.end_view;
+            }
+        });
+        // RecyclerView的点击事件
+        mBookListAdater.setOnItemClickListener(new BaseRvAdapter.OnItemClickListener<BookInfoResponse>() {
+            @Override
+            public void onItemClick(View view, BaseViewHolder holder, BookInfoResponse data) {
+
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(BookInfoResponse.getSerialVersionName(), data);
+                ImageView book_iv = holder.getView(R.id.iv_book_img);
+                GlideBitmapDrawable drawable = (GlideBitmapDrawable) book_iv.getDrawable();
+                Bitmap bitmap;
+                if (drawable != null) {
+                    bitmap = drawable.getBitmap();
+                    bundle.putParcelable("book_img", bitmap);
+                }
+                Intent intent = new Intent(getActivity(), BookDetailActivity.class);
+                intent.putExtras(bundle);
+                if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP){//android 5.0后才支持次跳转动画
+                    ActivityOptionsCompat options = ActivityOptionsCompat.
+                            makeSceneTransitionAnimation(getActivity(), holder.getView(R.id.iv_book_img), "book_img");
+                    getActivity().startActivity(intent,options.toBundle());
+                }else{
+                    startActivity(intent);
+                }
             }
         });
     }

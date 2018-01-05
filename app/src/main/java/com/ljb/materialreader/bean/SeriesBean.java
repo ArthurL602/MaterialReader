@@ -3,11 +3,11 @@ package com.ljb.materialreader.bean;
 import java.io.Serializable;
 
 /**
- * Author   :hymanme
- * Email    :hymanme@163.com
- * Create at 2016/2/27 0027
- * Description:
+ *  Author      :ljb
+ *  Date        :2018/1/4
+ *  Description :
  */
+
 public class SeriesBean implements Serializable {
     private String id;
     private String title;

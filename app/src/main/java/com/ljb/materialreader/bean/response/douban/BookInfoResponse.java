@@ -7,17 +7,17 @@ import com.ljb.materialreader.bean.ImageBean;
 import com.ljb.materialreader.bean.SeriesBean;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
-
 /**
- * Author   :hymanme
- * Email    :hymanme@163.com
- * Create at 2016/1/8
- * Description:
+ *  Author      :ljb
+ *  Date        :2018/1/4
+ *  Description : 图书信息实体类
  */
+
 public class BookInfoResponse implements Serializable {
-    public static final long serialVersionUID = 7060254125600464481L;
     public static final String serialVersionName = "bookInfo";
+    private static final long serialVersionUID = 4488335443605530841L;
     private String id;
     private String title;
     private String subtitle;
@@ -159,6 +159,18 @@ public class BookInfoResponse implements Serializable {
 
     public void setOrigin_title(String origin_title) {
         this.origin_title = origin_title;
+    }
+
+    @Override
+    public String toString() {
+        return "BookInfoResponse{" + "id='" + id + '\'' + ", title='" + title + '\'' + ", subtitle='" + subtitle +
+                '\'' + ", publisher='" + publisher + '\'' + ", rating=" + rating + ", author=" + Arrays.toString
+                (author) + ", translator=" + Arrays.toString(translator) + ", pubdate='" + pubdate + '\'' + ", tags="
+                + tags + ", image='" + image + '\'' + ", ebook_url='" + ebook_url + '\'' + ", pages='" + pages + '\''
+                + ", binding='" + binding + '\'' + ", origin_title='" + origin_title + '\'' + ", images=" + images +
+                ", isbn13='" + isbn13 + '\'' + ", author_intro='" + author_intro + '\'' + ", summary='" + summary +
+                '\'' + ", ebook_price='" + ebook_price + '\'' + ", price='" + price + '\'' + ", series=" + series +
+                ", alt='" + alt + '\'' + '}';
     }
 
     public ImageBean getImages() {

@@ -4,12 +4,12 @@ import android.content.Context;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 
+import com.bumptech.glide.Glide;
 import com.ljb.materialreader.R;
 import com.ljb.materialreader.base.BaseRvAdapter;
 import com.ljb.materialreader.base.BaseViewHolder;
 import com.ljb.materialreader.bean.response.douban.BookInfoResponse;
 import com.ljb.materialreader.callback.IImageLoader;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -38,7 +38,7 @@ public class BookListAdater extends BaseRvAdapter<BookInfoResponse> {
         holder.setImageView(data.getImages().getLarge(), R.id.iv_book_img, new IImageLoader() {
             @Override
             public void loadImage(ImageView imageView, String path) {
-                Picasso.with(mContext).load(path).into(imageView);
+                Glide.with(mContext).load(path).into(imageView);
             }
         });
     }

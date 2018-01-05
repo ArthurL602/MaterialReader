@@ -17,6 +17,7 @@
             android:layout_width="90dp"
             android:layout_height="130dp"
             android:scaleType="centerCrop"
+            android:transitionName="book_img"
             android:src="@drawable/empty_book_img"/>
 
         <LinearLayout

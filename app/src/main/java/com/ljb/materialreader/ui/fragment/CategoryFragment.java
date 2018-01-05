@@ -11,6 +11,7 @@ import com.ljb.materialreader.adapter.CategoryAdapter;
 import com.ljb.materialreader.base.BaseFragment;
 import com.ljb.materialreader.base.BasePresenter;
 import com.ljb.materialreader.base.BaseRvAdapter;
+import com.ljb.materialreader.base.BaseViewHolder;
 import com.ljb.materialreader.bean.CategoryBean;
 import com.ljb.materialreader.utils.ResourceUtils;
 
@@ -75,8 +76,11 @@ public class CategoryFragment extends BaseFragment {
     @Override
     protected void initEvent() {
         mAdapter.setOnItemClickListener(new BaseRvAdapter.OnItemClickListener() {
+
+
             @Override
-            public void onItemClick(View view, BaseRvAdapter adapter) {
+            public void onItemClick(View view, BaseViewHolder holder, Object data) {
+
             }
         });
     }

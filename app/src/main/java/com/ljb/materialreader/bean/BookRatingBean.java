@@ -3,11 +3,11 @@ package com.ljb.materialreader.bean;
 import java.io.Serializable;
 
 /**
- * Author   :hymanme
- * Email    :hymanme@163.com
- * Create at 2016/1/8
- * Description:
+ *  Author      :ljb
+ *  Date        :2018/1/4
+ *  Description :
  */
+
 public class BookRatingBean implements Serializable {
     private int max;
     private int numRaters;

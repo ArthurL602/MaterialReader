@@ -4,11 +4,11 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Author   :hymanme
- * Email    :hymanme@163.com
- * Create at 2016/1/8
- * Description:
+ *  Author      :ljb
+ *  Date        :2018/1/4
+ *  Description :
  */
+
 public class BookTagBean implements Parcelable {
     private int count;
     private String name;
