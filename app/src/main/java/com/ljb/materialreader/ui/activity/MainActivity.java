@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
@@ -26,15 +27,16 @@ import com.ljb.materialreader.base.BaseActivity;
 import com.ljb.materialreader.base.BaseFragment;
 import com.ljb.materialreader.base.BasePresenter;
 import com.ljb.materialreader.control.SearchViewController;
+import com.ljb.materialreader.ui.fragment.EBookFragment;
 import com.ljb.materialreader.ui.fragment.HomeFragment;
 import com.ljb.materialreader.utils.KeyBoardUtils;
 import com.ljb.materialreader.utils.ScreenUtils;
 import com.ljb.materialreader.utils.SnUtils;
+import com.ljb.materialreader.utils.StatusUtils;
 import com.ljb.materialreader.utils.TUtils;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import butterknife.BindView;
-import butterknife.OnClick;
 import io.reactivex.functions.Consumer;
 
 import static com.ljb.materialreader.R.id.drawer;
@@ -61,6 +63,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private SearchViewController mController;
     private BaseFragment mCurrentFragment;
     private RxPermissions mRxPermissions;
+    private long lastMillis;
+    private EBookFragment mEBookFragment;
 
     public FloatingActionButton getFab() {
         return mFab;
@@ -82,11 +86,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     protected void initView() {
         initFragment();
+        StatusUtils.setDrawerLayoutStatus(this, mDrawerView, false, getResources().getColor(R.color.colorPrimary));
         mFragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = mFragmentManager.beginTransaction();
-        transaction.replace(R.id.frame_content, mHomeFragment);
+        transaction.add(R.id.frame_content, HomeFragment.newInstance());
         transaction.commit();
-
 
         mRxPermissions = new RxPermissions(this);
     }
@@ -96,7 +100,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     private void initFragment() {
-        mHomeFragment = new HomeFragment();
+//        mHomeFragment = HomeFragment.newInstance();
+//        mEBookFragment = EBookFragment.newInstance();
     }
 
     @Override
@@ -154,6 +159,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                                         public void accept(Boolean aBoolean) throws Exception {
                                             if (aBoolean) {
                                                 startActivity(new Intent(MainActivity.this, CaptureActivity.class));
+                                                KeyBoardUtils.closeKeyBord(mController.getEtContent(), MainActivity
+                                                        .this);
                                             } else {
                                                 TUtils.showShort("请授予权限");
                                             }
@@ -165,7 +172,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                             String request = mController.getEtContent().getText().toString();
                             Intent intent = null;
                             if (getCurrrentFrament() instanceof HomeFragment) {//如果当前是HomeFragment
-                                intent=new Intent(MainActivity.this,SearchResultActivity.class);
+                                intent = new Intent(MainActivity.this, SearchResultActivity.class);
                             }
                             intent.putExtra("q", request);
                             startActivity(intent);
@@ -219,13 +226,41 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         animator.start();
     }
 
-    @OnClick(R.id.nav_view)
-    public void onViewClicked() {
-    }
-
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        return false;
+        switch (item.getItemId()) {
+            case R.id.nav_home://home
+                switchFragment(HomeFragment.newInstance());
+                break;
+            case R.id.nav_ebook://ebook
+                switchFragment(EBookFragment.newInstance());
+                break;
+            case R.id.nav_bookshelf:
+                break;
+            case R.id.nav_manager:
+                break;
+            case R.id.nav_theme:
+                break;
+            case R.id.nav_send:
+                break;
+        }
+        mDrawerView.closeDrawer(Gravity.START);
+        return true;
+    }
+
+    private void switchFragment(Fragment to) {
+        BaseFragment fragment = getCurrrentFrament();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.frame_content, to);
+//        if (to.isAdded()) {//判断是否被添加了
+//            Log.e("TAG", "show");
+//            transaction.hide(fragment).show(to);
+//        } else {
+//            Log.e("TAG", "add");
+//            transaction.add(R.id.frame_content, to);
+//        }
+        transaction.commit();
     }
 
     @Override
@@ -233,6 +268,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         int menuId = R.menu.menu_main;
         if (getCurrrentFrament() instanceof HomeFragment) {
             menuId = R.menu.menu_main;
+        }
+        if (getCurrrentFrament() instanceof EBookFragment) {
+            menuId = R.menu.ebook_main;
         }
         getMenuInflater().inflate(menuId, menu);
         return super.onCreateOptionsMenu(menu);
@@ -245,6 +283,29 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 showSearchView();
                 return true;
         }
+        getCurrrentFrament().onOptionsItemSelected(item);
         return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        if (mDrawerView.isDrawerOpen(Gravity.START)) {
+            mDrawerView.closeDrawer(Gravity.START);
+        } else {
+            long currentMillis = System.currentTimeMillis();
+            if (currentMillis - lastMillis > 500) {
+                SnUtils.showAction(mNavView, "真的要退出嘛？", "确定退出", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        finish();
+                    }
+                });
+            } else {
+                finish();
+            }
+            lastMillis = currentMillis;
+        }
+
     }
 }

@@ -5,7 +5,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.ljb.materialreader.R;
 import com.ljb.materialreader.base.BaseFragment;
 
 import java.util.List;
@@ -21,10 +20,10 @@ public class VpAdater extends FragmentStatePagerAdapter {
     private String[] mTitles;
     private Context mContext;
 
-    public VpAdater(FragmentManager fm, List<BaseFragment> fragments, Context context) {
+    public VpAdater(FragmentManager fm, List<BaseFragment> fragments, Context context,String [] titles) {
         super(fm);
         mFragments = fragments;
-        mTitles = context.getResources().getStringArray(R.array.main_tab_type);
+        mTitles =titles;
         mContext = context;
     }
 

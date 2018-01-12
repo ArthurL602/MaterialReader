@@ -1,7 +1,9 @@
 package com.ljb.materialreader.ui.activity;
 
 
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.util.Log;
 
 import com.ljb.materialreader.R;
 import com.ljb.materialreader.base.BaseActivity;
@@ -17,7 +19,6 @@ import com.uuzuche.lib_zxing.activity.CodeUtils;
  */
 
 public class CaptureActivity extends BaseActivity {
-
 
     private CaptureFragment mCaptureFragment;
 
@@ -41,12 +42,24 @@ public class CaptureActivity extends BaseActivity {
     protected void initEvent() {
         mCaptureFragment.setAnalyzeCallback(new CodeUtils.AnalyzeCallback() {
             @Override
-            public void onAnalyzeSuccess(Bitmap mBitmap, String result) {
-
+            public void onAnalyzeSuccess(Bitmap mBitmap, String result) {//扫描成功
+                Log.e("TAG", "result： " + result);
+                Intent intent = null;
+                if (result.startsWith("http")) {
+                    intent = new Intent(CaptureActivity.this, WebViewActivity.class);
+                    intent.putExtra("result", result);
+                    startActivity(intent);
+                    finish();
+                }else{
+                    intent = new Intent(CaptureActivity.this,SearchResultActivity.class);
+                    intent.putExtra("q",result);
+                    startActivity(intent);
+                    finish();
+                }
             }
 
             @Override
-            public void onAnalyzeFailed() {
+            public void onAnalyzeFailed() {//扫描失败
 
             }
         });

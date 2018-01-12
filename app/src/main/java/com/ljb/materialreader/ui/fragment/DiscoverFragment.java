@@ -9,14 +9,21 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.github.hymanme.tagflowlayout.TagFlowLayout;
 import com.ljb.materialreader.R;
 import com.ljb.materialreader.adapter.DiscoverAdapter;
 import com.ljb.materialreader.base.BaseFragment;
-import com.ljb.materialreader.base.BasePresenter;
+import com.ljb.materialreader.bean.response.ebook.HotWords;
 import com.ljb.materialreader.ui.activity.CaptureActivity;
+import com.ljb.materialreader.ui.activity.ESearchResultActivity;
 import com.ljb.materialreader.ui.activity.MainActivity;
+import com.ljb.materialreader.ui.activity.SearchResultActivity;
+import com.ljb.materialreader.ui.presenter.EBookPresenter;
+import com.ljb.materialreader.ui.view.EBookListView;
+import com.ljb.materialreader.utils.SnUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -27,7 +34,7 @@ import butterknife.BindView;
  * Description :发现Fragment
  */
 
-public class DiscoverFragment extends BaseFragment {
+public class DiscoverFragment extends BaseFragment<EBookPresenter> implements EBookListView {
     @BindView(R.id.rv)
     RecyclerView mRv;
     @BindView(R.id.swipe_refresh)
@@ -51,8 +58,8 @@ public class DiscoverFragment extends BaseFragment {
     }
 
     @Override
-    protected BasePresenter getPresenter() {
-        return null;
+    protected EBookPresenter getPresenter() {
+        return new EBookPresenter(this, this);
     }
 
     @Override
@@ -196,6 +203,8 @@ public class DiscoverFragment extends BaseFragment {
             mDatas.add("科幻小说");
             mDatas.add("音乐");
             mDatas.add("人文");
+        } else {
+            mPresenter.getHotWords();
         }
     }
 
@@ -206,13 +215,51 @@ public class DiscoverFragment extends BaseFragment {
             public void onClick(View view) {
                 if (view instanceof ImageView) {
                     startActivity(new Intent((MainActivity) getActivity(), CaptureActivity.class));
+
                 } else {
                     ((MainActivity) getActivity()).showSearchView();
                 }
 
             }
         });
+
+        mAdapter.setOnTagClickListener(new DiscoverAdapter.OnTagClickListener() {
+            @Override
+            public void onTagClick(TagFlowLayout parent, View view, int position) {
+                Intent intent = null;
+                if (type == 0) {
+                    intent = new Intent(getActivity(), SearchResultActivity.class);
+                } else {
+                    intent = new Intent(getActivity(), ESearchResultActivity.class);
+                    intent.putExtra("type", 0);
+                }
+                intent.putExtra("q", mDatas.get(position));
+                startActivity(intent);
+            }
+        });
     }
 
 
+    @Override
+    public void showProgress() {
+        mSwipeRefresh.setRefreshing(true);
+    }
+
+    @Override
+    public void hideProgress() {
+        mSwipeRefresh.setRefreshing(false);
+    }
+
+    @Override
+    public void showToast(String msg) {
+        SnUtils.showShort(mRv, msg);
+    }
+
+    @Override
+    public void onRefresh(Object data) {
+        if (data instanceof HotWords) {
+            final String[] hotWords = ((HotWords) data).getHotWords();
+            mAdapter.addNewData(Arrays.asList(hotWords));
+        }
+    }
 }

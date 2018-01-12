@@ -10,6 +10,7 @@ import com.ljb.materialreader.adapter.VpAdater;
 import com.ljb.materialreader.base.BaseFragment;
 import com.ljb.materialreader.base.BasePresenter;
 import com.ljb.materialreader.ui.activity.MainActivity;
+import com.ljb.materialreader.utils.ResourceUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,10 @@ public class HomeFragment extends BaseFragment {
     FloatingActionButton mFab;
     private List<BaseFragment> mFragments;
 
-
+public static HomeFragment newInstance(){
+    HomeFragment fragment=new HomeFragment();
+    return fragment;
+}
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_home;
@@ -63,7 +67,8 @@ public class HomeFragment extends BaseFragment {
         mFragments.add(BookListFragment.newInstance("小说"));
         mFragments.add(DiscoverFragment.newInstance(0));
 
-        mVp.setAdapter(new VpAdater(getChildFragmentManager(), mFragments, getContext()));
+        String [] tiles = ResourceUtils.getStringArray(R.array.main_tab_type);
+        mVp.setAdapter(new VpAdater(getChildFragmentManager(), mFragments, getContext(),tiles));
         //设置预加载
         mVp.setOffscreenPageLimit(5);
         mVp.setCurrentItem(2);

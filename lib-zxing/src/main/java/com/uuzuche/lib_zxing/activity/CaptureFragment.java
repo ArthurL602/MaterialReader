@@ -55,10 +55,7 @@ public class CaptureFragment extends Fragment implements SurfaceHolder.Callback 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
         CameraManager.init(getActivity().getApplication());
-
         hasSurface = false;
         inactivityTimer = new InactivityTimer(this.getActivity());
     }

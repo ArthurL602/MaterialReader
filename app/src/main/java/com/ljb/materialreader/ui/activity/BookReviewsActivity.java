@@ -6,6 +6,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import com.ljb.materialreader.R;
 import com.ljb.materialreader.adapter.BookReviewsAdapter;
@@ -84,10 +85,10 @@ public class BookReviewsActivity extends BaseActivity<BookDetailPresenter> imple
 
         Intent intent = getIntent();
         if (intent == null) return;
-        String bookName = intent.getStringExtra("book");
+        String bookName = intent.getStringExtra("bookName");
         mBookId = intent.getStringExtra("bookId");
         if (bookName.isEmpty()) return;
-        mToolbar.setTitle(bookName + " 评论");
+        getSupportActionBar().setTitle(bookName + " 评论");
     }
 
     @Override
@@ -147,9 +148,36 @@ public class BookReviewsActivity extends BaseActivity<BookDetailPresenter> imple
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+
+    }
+
+    @Override
     public void updateView(Object resutl) {
         BookReviewsListResponse bookReviewsListResponse = (BookReviewsListResponse) resutl;
         List<BookReviewResponse> reviews = bookReviewsListResponse.getReviews();
+        if (reviews == null && reviews.isEmpty()) {
+            mAdapter.setLoadEnd();
+            return;
+        }
+        if (page == 0) {
+            mAdapter.addNewData(reviews);
+        } else {
+            mAdapter.addLoadMoreData(reviews);
+        }
+        mAdapter.setLoadComplete();
+        if (reviews.size() >= count) {
+            page++;
+        } else {
+            mAdapter.setLoadEnd();
+        }
+
 
     }
 }

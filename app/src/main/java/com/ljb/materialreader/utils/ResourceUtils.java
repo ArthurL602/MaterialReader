@@ -16,6 +16,10 @@ public class ResourceUtils {
         return App.getContext().getResources().getStringArray(resId);
     }
 
+    public static String getString(int resId) {
+        return App.getContext().getResources().getString(resId);
+    }
+
     /**
      * 获取图片数组
      *

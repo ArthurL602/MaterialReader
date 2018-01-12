@@ -43,4 +43,16 @@ public class BookReviewsAdapter extends BaseRvAdapter<BookReviewResponse> {
         }
 
     }
+
+    public void addNewData(List<BookReviewResponse> datas) {
+        getDatas().clear();
+        getDatas().addAll(datas);
+        notifyDataSetChanged();
+    }
+
+    public void addLoadMoreData(List<BookReviewResponse> datas) {
+        int size = getDatas().size();
+        getDatas().addAll(datas);
+        notifyItemInserted(size);
+    }
 }

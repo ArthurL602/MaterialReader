@@ -144,4 +144,11 @@ public class DiscoverAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     public interface OnItemClickListener {
         void onClick(View view);
     }
+
+    public void addNewData(List<String> data) {
+        mTags.clear();
+        mTags.addAll(data);
+        notifyItemChanged(1);
+
+    }
 }

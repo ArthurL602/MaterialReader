@@ -1,16 +1,25 @@
 package com.ljb.materialreader.ui.activity;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.os.Build;
+import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 
+import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.ljb.materialreader.R;
 import com.ljb.materialreader.adapter.BookListAdater;
 import com.ljb.materialreader.base.BaseActivity;
 import com.ljb.materialreader.base.BaseRvAdapter;
+import com.ljb.materialreader.base.BaseViewHolder;
 import com.ljb.materialreader.bean.response.douban.BookInfoResponse;
 import com.ljb.materialreader.bean.response.douban.BookListResponse;
 import com.ljb.materialreader.ui.presenter.BookListPresenter;
@@ -138,7 +147,30 @@ public class SearchResultActivity extends BaseActivity<BookListPresenter> implem
             }
         });
 
-
+        mAdater.setOnItemClickListener(new BaseRvAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, BaseViewHolder holder, Object data) {
+                BookInfoResponse bookInfo = mBookInfoResponses.get(holder.getLayoutPosition());
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(BookInfoResponse.getSerialVersionName(), bookInfo);
+                ImageView book_iv = holder.getView(R.id.iv_book_img);
+                GlideBitmapDrawable drawable = (GlideBitmapDrawable) book_iv.getDrawable();
+                Bitmap bitmap;
+                if (drawable != null) {
+                    bitmap = drawable.getBitmap();
+                    bundle.putParcelable("book_img", bitmap);
+                }
+                Intent intent = new Intent(SearchResultActivity.this, BookDetailActivity.class);
+                intent.putExtras(bundle);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {//android 5.0后才支持次跳转动画
+                    ActivityOptionsCompat options = ActivityOptionsCompat.
+                            makeSceneTransitionAnimation(SearchResultActivity.this, holder.getView(R.id.iv_book_img), "book_img");
+                    SearchResultActivity.this.startActivity(intent, options.toBundle());
+                } else {
+                    startActivity(intent);
+                }
+            }
+        });
 
     }
 

@@ -30,11 +30,14 @@ import com.ljb.materialreader.bean.response.douban.BookSeriesListResponse;
 import com.ljb.materialreader.ui.presenter.BookDetailPresenter;
 import com.ljb.materialreader.ui.view.BookDetailView;
 import com.ljb.materialreader.utils.SnUtils;
+import com.ljb.materialreader.utils.StatusUtils;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+
+import static com.ljb.materialreader.R.id.iv_book_bg;
 
 /**
  * Author      :ljb
@@ -51,7 +54,7 @@ public class BookDetailActivity extends BaseActivity<BookDetailPresenter> implem
     private static final int PAGE = 0;
 
 
-    @BindView(R.id.iv_book_bg)
+    @BindView(iv_book_bg)
     ImageView mIvBookBg;
     @BindView(R.id.iv_book_img)
     ImageView mIvBookImg;
@@ -91,6 +94,8 @@ public class BookDetailActivity extends BaseActivity<BookDetailPresenter> implem
 
     @Override
     protected void initView() {
+
+        StatusUtils.setStatusTransparent(this);
         initData();
         initToolbar();
         mBookSeriesListResponse = new BookSeriesListResponse();
@@ -101,7 +106,7 @@ public class BookDetailActivity extends BaseActivity<BookDetailPresenter> implem
         mRvContent.setLayoutManager(layoutManager);
 
         //设置适配器
-        mAdapter = new BookDetailAdapter(mBookInfoResponse, mBookReviewsListResponse, mBookSeriesListResponse);
+        mAdapter = new BookDetailAdapter(mBookInfoResponse, mBookReviewsListResponse, mBookSeriesListResponse,this);
         mRvContent.setAdapter(mAdapter);
 
         //设置动画
@@ -113,7 +118,8 @@ public class BookDetailActivity extends BaseActivity<BookDetailPresenter> implem
         //设置图片背景
         if (mBookImg != null) {
             mIvBookBg.setImageBitmap(mBookImg);
-//            mIvBookImg.setImageBitmap();
+//            mIvBookBg.setImageBitmap(Blur.apply(mBookImg));
+//            mIvBookBg.setAlpha(0.9f);
         } else {
             Glide.with(this).load(mBookInfoResponse.getUrl()).into(mIvBookBg);
         }
@@ -194,6 +200,9 @@ public class BookDetailActivity extends BaseActivity<BookDetailPresenter> implem
 
     @OnClick(R.id.fab)
     public void onViewClicked() {
+        Intent intent = new Intent(BookDetailActivity.this, WebViewActivity.class);
+        intent.putExtra("result", mBookInfoResponse.getUrl());
+        startActivity(intent);
     }
 
     @Override
@@ -216,7 +225,7 @@ public class BookDetailActivity extends BaseActivity<BookDetailPresenter> implem
         if (resutl instanceof BookReviewsListResponse) {
             BookReviewsListResponse reviews = (BookReviewsListResponse) resutl;
             List<BookReviewResponse> review = reviews.getReviews();
-
+            mAdapter.setTotal(reviews.getTotal());
             mAdapter.addReviews(review);
             if (mBookInfoResponse.getSeries() != null) {//如果推荐书籍不为空
                 mPresenter.loadSerial(mBookInfoResponse.getId(), SERIES_COUNT * PAGE, SERIES_COUNT, SERIES_FIELDS);

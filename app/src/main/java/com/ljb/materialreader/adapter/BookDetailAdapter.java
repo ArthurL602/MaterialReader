@@ -2,6 +2,7 @@ package com.ljb.materialreader.adapter;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.AppCompatRatingBar;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -23,6 +24,7 @@ import com.ljb.materialreader.bean.response.douban.BookReviewsListResponse;
 import com.ljb.materialreader.bean.response.douban.BookSeriesListResponse;
 import com.ljb.materialreader.callback.IImageLoader;
 import com.ljb.materialreader.control.BookSeriesCeilController;
+import com.ljb.materialreader.ui.activity.BookReviewsActivity;
 
 import java.util.List;
 
@@ -33,6 +35,11 @@ import java.util.List;
  */
 
 public class BookDetailAdapter extends RecyclerView.Adapter<BaseViewHolder> {
+
+    public void setTotal(int total) {
+        mReviewsListResponse.setTotal(total);
+    }
+
     /**
      * 图书信息
      */
@@ -76,10 +83,11 @@ public class BookDetailAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     }
 
     public BookDetailAdapter(BookInfoResponse bookInfo, BookReviewsListResponse reviewsListResponse,
-                             BookSeriesListResponse seriesListResponse) {
+                             BookSeriesListResponse seriesListResponse, Context context) {
         mBookInfo = bookInfo;
         mReviewsListResponse = reviewsListResponse;
         mSeriesListResponse = seriesListResponse;
+        mContext = context;
     }
 
     /**
@@ -125,7 +133,7 @@ public class BookDetailAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     public void onBindViewHolder(final BaseViewHolder holder, int position) {
         switch (holder.getItemViewType()) {
             case TYPE_BOOK_INFO://信息
-                 AppCompatRatingBar ratingBar = holder.getView(R.id.rating_bar);
+                AppCompatRatingBar ratingBar = holder.getView(R.id.rating_bar);
                 ratingBar.setRating(Float.valueOf(mBookInfo.getRating().getAverage()) / 2);
                 holder.setText(mBookInfo.getRating().getAverage(), R.id.tv_hots_num)//
                         .setText(mBookInfo.getRating().getNumRaters() + "人评论", R.id.tv_comment_num)//
@@ -176,23 +184,28 @@ public class BookDetailAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 break;
             case TYPE_BOOK_COMMENT://评论
                 List<BookReviewResponse> reviews = mReviewsListResponse.getReviews();
+                Log.e("TAG", "position: " + position);
                 if (reviews.isEmpty()) {
                     holder.itemView.setVisibility(View.GONE);
                 } else if (position == HEADER_COUNT) {
-
-                   TextView tv = holder.getView(R.id.tv_comment_title);
+                    TextView tv = holder.getView(R.id.tv_comment_title);
                     tv.setVisibility(View.VISIBLE);
                 } else if (position == reviews.size() + 1) {//更多评论
                     holder.getView(R.id.tv_more_comment).setVisibility(View.VISIBLE);
-                    Log.e("TAG", " mReviewsListResponse.getTotal(): "+ mReviewsListResponse.getCount());
                     holder.setText("更多评论" + mReviewsListResponse.getTotal() + "条", R.id.tv_more_comment);
                     holder.getView(R.id.tv_more_comment).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             //更多评论
+                            Intent intent = new Intent(mContext, BookReviewsActivity.class);
+                            intent.putExtra("bookId", mBookInfo.getId());
+                            intent.putExtra("bookName", mBookInfo.getTitle());
+                            mContext.startActivity(intent);
                         }
                     });
                 }
+
+                //
                 int pos = position - HEADER_COUNT;
                 BookReviewResponse review = reviews.get(pos);
                 holder.setImageView(review.getAuthor().getAvatar(), R.id.iv_avatar, new IImageLoader() {
@@ -256,7 +269,7 @@ public class BookDetailAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         } else if (position > 1 && position < (mReviewsListResponse == null ? HEADER_COUNT : (mReviewsListResponse
                 .getReviews().size() + HEADER_COUNT))) {//判断类型是否是评论类型（position > 1）
             return TYPE_BOOK_COMMENT;
-        }else{
+        } else {
             return TYPE_BOOK_RECOMMENT;//推荐书籍
         }
 

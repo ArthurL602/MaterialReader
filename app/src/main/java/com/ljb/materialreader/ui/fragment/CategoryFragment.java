@@ -1,5 +1,6 @@
 package com.ljb.materialreader.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -13,6 +14,7 @@ import com.ljb.materialreader.base.BasePresenter;
 import com.ljb.materialreader.base.BaseRvAdapter;
 import com.ljb.materialreader.base.BaseViewHolder;
 import com.ljb.materialreader.bean.CategoryBean;
+import com.ljb.materialreader.ui.activity.CategoryDetailActivity;
 import com.ljb.materialreader.utils.ResourceUtils;
 
 import java.util.ArrayList;
@@ -80,7 +82,12 @@ public class CategoryFragment extends BaseFragment {
 
             @Override
             public void onItemClick(View view, BaseViewHolder holder, Object data) {
-
+                int index = holder.getLayoutPosition();
+                String title = mAdapter.getDatas().get(index).getName();
+                Intent intent = new Intent(getActivity(), CategoryDetailActivity.class);
+                intent.putExtra("index", index);
+                intent.putExtra("title", title);
+                startActivity(intent);
             }
         });
     }

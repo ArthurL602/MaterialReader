@@ -60,7 +60,7 @@ public abstract class BaseFragment<P extends BasePresenter> extends RxFragment i
         }
         if (mPresenter != null) {
             mPresenter.dettachView();
-
+            mPresenter=null;
         }
     }
 }

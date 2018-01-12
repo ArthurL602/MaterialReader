@@ -1,7 +1,5 @@
 package com.ljb.materialreader.api;
 
-import android.util.Log;
-
 import com.ihsanbal.logging.LoggingInterceptor;
 import com.ljb.materialreader.app.App;
 import com.ljb.materialreader.utils.NetWorkUtils;
@@ -15,7 +13,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import retrofit2.Retrofit;
-
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -102,7 +99,6 @@ public class ServiceFactory {
                         .removeHeader("Pragma")//
                         .build();
             } else {//没有网络
-                Log.e("TAG", "没有网络");
                 return chain.proceed(request).newBuilder()//
                         .header("Cache-Control", "public ,only-if-cache,max-stale=" + DEFAULT_MAX_STALE_OFFLINE)//
                         .removeHeader("Pragma")//

@@ -12,6 +12,14 @@ import android.view.View;
 public class SnUtils {
     public static void showShort(View view, String msg) {
         Snackbar.make(view, msg, Snackbar.LENGTH_SHORT).show();
+    }
 
+    public static void showAction(View view, String content, String actionStr, final View.OnClickListener callback) {
+        Snackbar.make(view, content, Snackbar.LENGTH_SHORT).setAction(actionStr, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callback.onClick(v);
+            }
+        }).show();
     }
 }

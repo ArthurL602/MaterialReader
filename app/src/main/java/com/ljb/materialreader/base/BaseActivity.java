@@ -3,6 +3,8 @@ package com.ljb.materialreader.base;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import com.ljb.materialreader.R;
+import com.ljb.materialreader.utils.StatusUtils;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
 import butterknife.ButterKnife;
@@ -20,13 +22,17 @@ public abstract class BaseActivity<P extends BasePresenter> extends RxAppCompatA
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutId());
+
         ButterKnife.bind(this);
         mPresenter = getPresenter();
         if (mPresenter != null) {
             mPresenter.attachView(this);
         }
+        //设置状态栏颜色
+        StatusUtils.setStatusColor(this,getResources().getColor(R.color.colorPrimary));
         initView();
         initEvent();
+
     }
 
 

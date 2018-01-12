@@ -2,8 +2,8 @@ package com.ljb.materialreader.ui.fragment;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -176,36 +176,23 @@ public class BookListFragment extends BaseFragment<BookListPresenter> implements
                 }
                 Intent intent = new Intent(getActivity(), BookDetailActivity.class);
                 intent.putExtras(bundle);
-                if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP){//android 5.0后才支持次跳转动画
-                    ActivityOptionsCompat options = ActivityOptionsCompat.
-                            makeSceneTransitionAnimation(getActivity(), holder.getView(R.id.iv_book_img), "book_img");
-                    getActivity().startActivity(intent,options.toBundle());
-                }else{
-                    startActivity(intent);
-                }
+                ActivityOptionsCompat options = ActivityOptionsCompat.
+                        makeSceneTransitionAnimation(getActivity(), holder.getView(R.id.iv_book_img), "book_img");
+                ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
             }
         });
     }
 
     @Override
     public void showProgress() {
-        mSwipeRefresh.post(new Runnable() {
-            @Override
-            public void run() {
-                mSwipeRefresh.setRefreshing(true);
-            }
-        });
+        mSwipeRefresh.setRefreshing(true);
     }
 
     @Override
     public void hideProgress() {
-        mSwipeRefresh.post(new Runnable() {
-            @Override
-            public void run() {
-                mSwipeRefresh.setRefreshing(false);
-            }
-        });
+        mSwipeRefresh.setRefreshing(false);
     }
+
 
     @Override
     public void showToast(String msg) {
@@ -234,7 +221,6 @@ public class BookListFragment extends BaseFragment<BookListPresenter> implements
             mBookListAdater.addMoreData(result.getBooks());
             mBookListAdater.setLoadComplete();
             page++;
-
         } else {
             mBookListAdater.setLoadEnd();
         }

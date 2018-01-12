@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_sex"
+        android:icon="@drawable/ic_gender_male_white"
+        android:title="性别"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/action_menu"
+        android:title="搜索"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_action_search"/>
+</menu>
