@@ -1,17 +1,26 @@
 package com.ljb.materialreader.ui.fragment;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.ImageView;
 
+import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.ljb.materialreader.R;
 import com.ljb.materialreader.adapter.EBookListAdater;
 import com.ljb.materialreader.base.BaseFragment;
+import com.ljb.materialreader.base.BaseRvAdapter;
+import com.ljb.materialreader.base.BaseViewHolder;
 import com.ljb.materialreader.bean.event.GenderChangedEvent;
 import com.ljb.materialreader.bean.response.ebook.BookDetail;
 import com.ljb.materialreader.bean.response.ebook.Rankings;
+import com.ljb.materialreader.ui.activity.EBookDetailActivity;
 import com.ljb.materialreader.ui.activity.MainActivity;
 import com.ljb.materialreader.ui.presenter.EBookPresenter;
 import com.ljb.materialreader.ui.view.EBookListView;
@@ -105,6 +114,29 @@ public class EBookListFragment extends BaseFragment<EBookPresenter> implements E
             }
         });
         mAdater.bindFab(((MainActivity) getActivity()).getFab());
+
+        mAdater.setOnItemClickListener(new BaseRvAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, BaseViewHolder holder, Object data) {
+                int pos = holder.getLayoutPosition();
+                BookDetail bookDetail = mBookDetails.get(pos);
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("BookDetail", bookDetail);
+                bundle.putString("bookId", bookDetail.getId());
+                ImageView iv = holder.getView(R.id.iv_book_img);
+                GlideBitmapDrawable glideBitmapDrawable = (GlideBitmapDrawable) iv.getDrawable();
+                Bitmap bitmap;
+                if (glideBitmapDrawable != null) {
+                    bitmap = glideBitmapDrawable.getBitmap();
+                    bundle.putParcelable("book_img", bitmap);
+                }
+                Intent intent = new Intent(getActivity(), EBookDetailActivity.class);
+                intent.putExtras(bundle);
+                ActivityOptionsCompat compat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), iv,
+                        "book_img");
+                startActivity(intent, compat.toBundle());
+            }
+        });
     }
 
 
@@ -120,7 +152,7 @@ public class EBookListFragment extends BaseFragment<EBookPresenter> implements E
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessage(GenderChangedEvent changedEvent) {
-    mCategoryId = EBookUtils.getRankId(mType,changedEvent.getGender());
+        mCategoryId = EBookUtils.getRankId(mType, changedEvent.getGender());
         mPresenter.getRating(mCategoryId);
     }
 

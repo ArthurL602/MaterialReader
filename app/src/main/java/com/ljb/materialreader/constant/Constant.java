@@ -7,6 +7,8 @@ package com.ljb.materialreader.constant;
  */
 
 public class Constant {
+    public static final String BOOK_ZONE_ID = "book_zone_id";
+    public static String EBOOK_SORT_UPDATED="updated";
     /**
      * category index
      */
@@ -42,4 +44,5 @@ public class Constant {
     public static final int TYPE_RETAINED_RANKING = 1;
     public static final int TYPE_FINISHED_RANKING = 2;
     public static final int TYPE_POTENTIAL_RANKING = 3;
+
 }
