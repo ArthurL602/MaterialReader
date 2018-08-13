@@ -43,6 +43,7 @@ public class BookListAdater extends BaseRvAdapter<BookInfoResponse> {
         });
     }
 
+
     public int getItemCountSpan(int position) {
         switch (getItemViewType(position)) {
             case TYPE_EMPTY:
