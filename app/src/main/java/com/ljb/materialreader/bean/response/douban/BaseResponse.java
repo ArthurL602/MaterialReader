@@ -1,12 +1,14 @@
 package com.ljb.materialreader.bean.response.douban;
 
+import java.io.Serializable;
+
 /**
  * Author      :ljb
  * Date        :2018/1/2
  * Description :
  */
 
-public class BaseResponse {
+public class BaseResponse implements Serializable{
     private int code;
     private String  msg;
 

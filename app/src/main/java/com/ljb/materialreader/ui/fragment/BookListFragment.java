@@ -203,7 +203,7 @@ public class BookListFragment extends BaseFragment<BookListPresenter> implements
 
     @Override
     public void refreshData(BookListResponse result) {
-        if (result != null && !result.getBooks().isEmpty()) {
+        if (result != null && result.getBooks()!=null&&!result.getBooks().isEmpty()) {
             mBookListAdater.addDataInPosition(0, result.getBooks());
             mBookListAdater.setLoadComplete();
             page++;

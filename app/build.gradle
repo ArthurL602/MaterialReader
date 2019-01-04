@@ -13,6 +13,9 @@ android {
     }
     buildTypes {
         release {
+//            buildConfigField "boolean", "LOG_DEBUG", "false" //不显示log
+//            zipAlignEnabled true     //Zipalign优化
+//            shrinkResources true    // 移除无用的resource文件
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
